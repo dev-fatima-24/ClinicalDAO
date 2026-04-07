@@ -1,0 +1,45 @@
+services:
+  # Local Stellar testnet (Quickstart image)
+  stellar:
+    image: stellar/quickstart:latest
+    ports:
+      - "8000:8000"   # Horizon
+      - "11625:11625" # Peer
+      - "11626:11626" # HTTP
+    command: --testnet --enable-soroban-rpc
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      target: api
+    ports:
+      - "8080:8000"
+    env_file: .env
+    environment:
+      HORIZON_URL: http://stellar:8000
+      SOROBAN_RPC_URL: http://stellar:8000/soroban/rpc
+      STELLAR_NETWORK: testnet
+    depends_on:
+      stellar:
+        condition: service_healthy
+    volumes:
+      - ./api:/app/api  # hot-reload in dev
+
+  frontend:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && npm run dev -- --host"
+    environment:
+      VITE_SOROBAN_RPC_URL: http://localhost:8000/soroban/rpc
+      VITE_GOVERNANCE_CONTRACT_ID: ${GOVERNANCE_CONTRACT_ID}
+      VITE_ESCROW_CONTRACT_ID: ${ESCROW_CONTRACT_ID}
+      VITE_TOKEN_CONTRACT_ID: ${TOKEN_CONTRACT_ID}
