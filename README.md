@@ -5,6 +5,8 @@
 ClinicalDAO is an open-source platform where researchers post clinical trial proposals, token holders vote on funding via DAO governance, and Soroban smart contracts enforce milestone-based fund releases. Trial participants are compensated directly in XLM or stablecoins — no intermediaries.
 
 ---
+
+## Screenshot
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ad74229e-592e-4b75-b672-64f245845aab" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8690e8c8-5773-48db-883b-1082e22beefd" />
 
